@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tagesplan App</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <h1>📅 Tagesplan</h1>
+
+  <div class="input-box">
+    <input id="taskInput" type="text" placeholder="Neue Aufgabe eingeben...">
+    <button onclick="addTask()">+</button>
+  </div>
+
+  <div class="progress">
+    <div id="progressBar"></div>
+  </div>
+  <p id="progressText">0% erledigt</p>
+
+  <ul id="taskList"></ul>
+
+  <div class="summary">
+    <h2>📊 Wochen-Zusammenfassung</h2>
+    <p id="weeklySummary">Noch keine Daten</p>
+    <p id="streak">🔥 Streak: 0 Tage</p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
