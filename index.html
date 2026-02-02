@@ -5,31 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tagesplan App</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <div class="app">
-  <h1>📅 Tagesplan</h1>
 
-  <div class="input-box">
-    <input id="taskInput" type="text" placeholder="Neue Aufgabe eingeben...">
-    <button onclick="addTask()">+</button>
-  </div>
+  <header>
+    <h1>📅 Tagesplan</h1>
+    <button onclick="toggleDarkMode()">🌙</button>
+  </header>
 
-  <div class="progress">
-    <div id="progressBar"></div>
-  </div>
-  <p id="progressText">0% erledigt</p>
+  <nav>
+    <button onclick="showPage('today')">Heute</button>
+    <button onclick="showPage('stats')">Statistik</button>
+  </nav>
 
-  <ul id="taskList"></ul>
+  <!-- HEUTE -->
+  <section id="todayPage" class="page">
+    <div class="input-box">
+      <input id="taskInput" type="text" placeholder="Neue Aufgabe eingeben...">
+      <button onclick="addTask()">+</button>
+    </div>
 
-  <div class="summary">
-    <h2>📊 Wochen-Zusammenfassung</h2>
-    <p id="weeklySummary">Noch keine Daten</p>
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
+    <p id="progressText">0% erledigt</p>
+
+    <ul id="taskList"></ul>
     <p id="streak">🔥 Streak: 0 Tage</p>
-  </div>
+  </section>
+
+  <!-- STATISTIK -->
+  <section id="statsPage" class="page hidden">
+    <h2>📊 Wochen-Statistik</h2>
+    <canvas id="weeklyChart"></canvas>
+
+    <h2>📈 Monats-Statistik</h2>
+    <canvas id="monthlyChart"></canvas>
+  </section>
+
 </div>
 
 <script src="script.js"></script>
 </body>
 </html>
+
