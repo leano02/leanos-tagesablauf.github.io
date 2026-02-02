@@ -1,9 +1,19 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let streak = JSON.parse(localStorage.getItem("streak")) || 0;
 
+function showPage(page) {
+  document.getElementById("todayPage").classList.add("hidden");
+  document.getElementById("statsPage").classList.add("hidden");
+
+  if (page === "today") renderTasks();
+  if (page === "stats") renderCharts();
+
+  document.getElementById(page + "Page").classList.remove("hidden");
+}
+
 function addTask() {
   const input = document.getElementById("taskInput");
-  if (input.value === "") return;
+  if (!input.value) return;
 
   tasks.push({
     text: input.value,
@@ -29,7 +39,7 @@ function renderTasks() {
   const today = new Date().toDateString();
   const todaysTasks = tasks.filter(t => t.date === today);
 
-  todaysTasks.forEach((task, i) => {
+  todaysTasks.forEach(task => {
     const li = document.createElement("li");
     li.className = task.completed ? "done" : "";
     li.innerHTML = `
@@ -40,7 +50,6 @@ function renderTasks() {
   });
 
   updateProgress(todaysTasks);
-  updateWeeklySummary();
 }
 
 function updateProgress(todayTasks) {
@@ -53,30 +62,56 @@ function updateProgress(todayTasks) {
   if (percent === 100 && todayTasks.length > 0) updateStreak();
 }
 
-function updateWeeklySummary() {
-  const days = {};
-  tasks.forEach(t => {
-    days[t.date] = (days[t.date] || 0) + (t.completed ? 1 : 0);
-  });
-
-  const summaryText = Object.keys(days).slice(-7).map(day =>
-    `${day}: ${days[day]} erledigt`
-  ).join("<br>");
-
-  document.getElementById("weeklySummary").innerHTML = summaryText || "Noch keine Daten";
-}
-
 function updateStreak() {
   const lastDate = localStorage.getItem("lastCompleted");
   const today = new Date().toDateString();
 
   if (lastDate !== today) {
     streak++;
-    localStorage.setItem("streak", JSON.stringify(streak));
+    localStorage.setItem("streak", streak);
     localStorage.setItem("lastCompleted", today);
   }
 
   document.getElementById("streak").innerText = `🔥 Streak: ${streak} Tage`;
+}
+
+function renderCharts() {
+  const days = {};
+  tasks.forEach(t => {
+    days[t.date] = (days[t.date] || 0) + (t.completed ? 1 : 0);
+  });
+
+  const labels = Object.keys(days).slice(-7);
+  const values = labels.map(d => days[d]);
+
+  new Chart(document.getElementById("weeklyChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Erledigte Aufgaben",
+        data: values
+      }]
+    }
+  });
+
+  const monthlyLabels = Object.keys(days).slice(-30);
+  const monthlyValues = monthlyLabels.map(d => days[d]);
+
+  new Chart(document.getElementById("monthlyChart"), {
+    type: "line",
+    data: {
+      labels: monthlyLabels,
+      datasets: [{
+        label: "Monatlicher Fortschritt",
+        data: monthlyValues
+      }]
+    }
+  });
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle("dark");
 }
 
 function saveTasks() {
@@ -84,3 +119,4 @@ function saveTasks() {
 }
 
 renderTasks();
+
